@@ -53,23 +53,9 @@ export class InboxCreationDTO{
     @IsBoolean()
     readonly isGroupVisible: boolean
 
+    @ApiPropertyOptional({type: Boolean})
+    @IsOptional()
+    @IsBoolean()
+    readonly isGroupPaying: boolean
+
 }
-
-
-/*export class InboxModificationDTO{
-
-    @ApiPropertyOptional()
-    @IsString()
-    @IsOptional()
-    readonly lastSender: string
-
-    @ApiPropertyOptional()
-    @IsNumber()
-    @IsOptional()
-    readonly unreadMessages: number
-
-    @ApiPropertyOptional()
-    @IsString()
-    @IsOptional()
-    readonly lastMessage: string
-}*/

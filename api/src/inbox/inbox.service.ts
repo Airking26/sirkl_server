@@ -23,8 +23,8 @@ export class InboxService{
             var channel : Channel
             if(!inboxCreationDTO.isConv){
               if(inboxCreationDTO.picOfGroup){
-                channel = serverClient.channel("try", inboxCreationDTO.idChannel, {members: inboxCreationDTO.members, created_by_id: inboxCreationDTO.createdBy, isConv: inboxCreationDTO.isConv, nameOfGroup: inboxCreationDTO.nameOfGroup, picOfGroup: inboxCreationDTO.picOfGroup, isGroupPrivate: inboxCreationDTO.isGroupPrivate, isGroupVisible: inboxCreationDTO.isGroupVisible})
-              } else channel = serverClient.channel("try", inboxCreationDTO.idChannel, {members: inboxCreationDTO.members, created_by_id: inboxCreationDTO.createdBy, isConv: inboxCreationDTO.isConv, nameOfGroup: inboxCreationDTO.nameOfGroup, isGroupPrivate: inboxCreationDTO.isGroupPrivate, isGroupVisible: inboxCreationDTO.isGroupVisible})
+                channel = serverClient.channel("try", inboxCreationDTO.idChannel, {members: inboxCreationDTO.members, created_by_id: inboxCreationDTO.createdBy, isConv: inboxCreationDTO.isConv, nameOfGroup: inboxCreationDTO.nameOfGroup, picOfGroup: inboxCreationDTO.picOfGroup, isGroupPrivate: inboxCreationDTO.isGroupPrivate, isGroupVisible: inboxCreationDTO.isGroupVisible, isGroupPaying: inboxCreationDTO.isGroupPaying})
+              } else channel = serverClient.channel("try", inboxCreationDTO.idChannel, {members: inboxCreationDTO.members, created_by_id: inboxCreationDTO.createdBy, isConv: inboxCreationDTO.isConv, nameOfGroup: inboxCreationDTO.nameOfGroup, isGroupPrivate: inboxCreationDTO.isGroupPrivate, isGroupVisible: inboxCreationDTO.isGroupVisible, isGroupPaying: inboxCreationDTO.isGroupPaying})
             } else channel = serverClient.channel("try", {members: inboxCreationDTO.members, created_by_id: inboxCreationDTO.createdBy, isConv: inboxCreationDTO.isConv})
             await channel.watch()
             if(inboxCreationDTO.message) await channel.sendMessage({text: inboxCreationDTO.message, user_id: inboxCreationDTO.createdBy})

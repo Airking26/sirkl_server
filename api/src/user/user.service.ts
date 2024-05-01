@@ -52,11 +52,11 @@ async createUserWithWallet(wallet: String, ens: String, platform: String) {
   var name;
   if(ens == undefined || ens == "0") name = ""
   else name = ens
-  const walletCount = await this.userModel.count({wallet: wallet.toLowerCase(), userName: name});
+  const walletCount = await this.userModel.count({wallet: wallet.toLowerCase()});
   if (walletCount > 0) {
       throw new BadRequestException('WALLET_ALREADY_USED');
   }
-  return new this.userModel({wallet : wallet.toLowerCase(), platformCreated: platform}).save();
+  return new this.userModel({wallet : wallet.toLowerCase(), platformCreated: platform, userName: name}).save();
 }
 
   async get_user_by_wallet(wallet: string): Promise<User>{
