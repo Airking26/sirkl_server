@@ -46,6 +46,12 @@ export class InboxController{
         return this.inboxService.deleteInbox(id, request.user)
     }
 
+    @ApiOperation({summary: 'delete channels'})
+    @Delete("deleteChannels")
+    deleteChannels(@Req() request){
+        return this.inboxService.deleteChannels()
+    }
+
     /*@ApiOperation({summary: "retrieve inboxes"})
     @ApiParam({ name: "offset", description: "offset", allowEmptyValue: false })
     @ApiOkResponse({type: InboxDTO, isArray: true})

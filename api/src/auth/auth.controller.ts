@@ -23,6 +23,11 @@ export class AuthController {
         return this.authService.handleRefreshToken(request.user)
     }
 
+    @Get('createUAW')
+    createUAW(){
+      return this.authService.createUAW()
+    }
+
     @ApiOperation({summary: 'Log user out'})
     @ApiCreatedResponse({type: UserInfoDTO})
     @ApiNotFoundResponse({description: 'User not found'})

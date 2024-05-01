@@ -25,6 +25,7 @@ export const UserSchema = new Schema(
     apnToken : {type: String, required: false, default: null},
     platformCreated : {type: String, required: false, default: null},
     platformUpdated : {type: String, required: false, default: null},
+    hasSBT: {type: Boolean, required: false, default: false}
   },
   { timestamps: true }
 );

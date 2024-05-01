@@ -43,11 +43,20 @@ export class NotificationInfoDTO{
     
     @ApiPropertyOptional({type: String})
     readonly requester: string
+
+    @ApiPropertyOptional({type: Boolean})
+    readonly paying: boolean
+
+    @ApiPropertyOptional({type: String})
+    readonly inviteId: string
+
+    @ApiPropertyOptional({type: String})
+    readonly channelPrice: string
 }
 
 export function formatToNotificationInfoDTO(notification: Notification, user: User): NotificationInfoDTO{
-    const {id, createdAt, hasBeenRead, type, picture, belongTo, username, idData, eventName, message, channelId, channelName, requester} = notification
-    return {id, createdAt, hasBeenRead, type , picture, belongTo, username, idData, eventName, message, channelId, channelName, requester}
+    const {id, createdAt, hasBeenRead, type, picture, belongTo, username, idData, eventName, message, channelId, channelName, requester, paying, inviteId, channelPrice} = notification
+    return {id, createdAt, hasBeenRead, type , picture, belongTo, username, idData, eventName, message, channelId, channelName, requester, paying, inviteId, channelPrice}
 }
 
 export function formatMulitpleNotificationInfoDTO(notifications: Notification[], user: User): NotificationInfoDTO[]{

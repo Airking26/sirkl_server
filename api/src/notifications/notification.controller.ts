@@ -56,4 +56,11 @@ export class NotificationController {
         return this.commentService.notifyUserAsAdmin(request.user, naoa)
     }
 
+    @ApiOperation({summary: "Notify user invited in paying group"})
+    @ApiBody({type: NotificationAddedOrAdmin, required: true})
+    @Post("invited_to_join_paying_group")
+    notifyUserInvitedToJoinPayingGroup(@Req() request, @Body() naoa: NotificationAddedOrAdmin){
+        return this.commentService.notifyUserInvitedToJoinGroup(request.user, naoa)
+    }
+
 }

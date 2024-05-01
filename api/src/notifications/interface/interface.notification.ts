@@ -12,4 +12,7 @@ export interface Notification{
     channelId: string
     channelName: string
     requester: string
+    paying: boolean
+    inviteId: string
+    channelPrice: string
 }

@@ -5,6 +5,7 @@ import { UserService } from "src/user/user.service";
 import { InboxController } from "./inbox.controller";
 import { InboxService } from "./inbox.service";
 import { InboxSchema } from "./schema/schema.inbox";
+import { APP_PIPE } from "@nestjs/core";
 
 @Module({
     imports: [

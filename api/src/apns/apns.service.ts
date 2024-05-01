@@ -357,9 +357,8 @@ export class ApnsService {
   
   }
 
-  userAddedInGroupAndroid(user, fcmToken, groupName, groupId){
+  userAddedInGroupAndroid(user, fcmToken, groupId, body){
     const title = "Sirkl";
-    const body = user.userName != "" ? user.userName + " added you in group " + groupName : (user.wallet.substring(0, 6) + "..." + (user.wallet.substring(user.wallet.length - 4))) + " added you in group " + groupName;
     const pic = user.picture;
 
     const message = fcmToken.map((token) => {
@@ -386,9 +385,8 @@ export class ApnsService {
     this.pushNotifications(message);
   }
 
-  userAddedInGroupIOS(user, fcmToken, groupName, groupId){
+  userAddedInGroupIOS(user, fcmToken, groupId, body){
     const title = "Sirkl";
-    const body = user.userName != "" ? user.userName + " added you in group " + groupName : (user.wallet.substring(0, 6) + "..." + (user.wallet.substring(user.wallet.length - 4))) + " added you in group " + groupName;
     const pic = user.picture;
 
     const message = fcmToken.map((token) => {
@@ -526,6 +524,34 @@ export class ApnsService {
           picture: pic,
           fcmToken: fcmToken,
         }
+      };
+    });
+    this.pushNotifications(message);
+  }
+
+  userInvitedToJoinGroup(user, fcmToken, body, groupId){
+    const title = "Sirkl";
+    const pic = user.picture;
+
+    const message = fcmToken.map((token) => {
+      return {
+        to: token,
+        notification: {
+          title: title,
+          body: body,
+          type: 8,
+          id: groupId,
+          picture: pic,
+          fcmToken: fcmToken,
+        },
+        data: {
+          title: title,
+          body: body,
+          type: 8,
+          id: groupId,
+          picture: pic,
+          fcmToken: fcmToken,
+        },
       };
     });
     this.pushNotifications(message);

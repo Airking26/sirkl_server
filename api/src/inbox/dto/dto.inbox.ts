@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
-import { isBoolean } from "lodash";
+import { Transform, Type } from "class-transformer";
+import { IsArray, IsBoolean, IsDecimal, IsNotEmpty, IsNumber, IsNumberString, IsOptional, IsString } from "class-validator";
 
 export class InboxCreationDTO{
     @ApiProperty({type: String})
@@ -57,5 +57,26 @@ export class InboxCreationDTO{
     @IsOptional()
     @IsBoolean()
     readonly isGroupPaying: boolean
+
+
+    @ApiPropertyOptional({ type: Number })
+    @IsOptional()
+    @IsNumber()
+    readonly price: number; 
+
+    @ApiPropertyOptional({type: String})
+    @IsOptional()
+    @IsString()
+    readonly tokenAccepted: string
+
+    @ApiPropertyOptional({type: String})
+    @IsOptional()
+    @IsString()
+    readonly idGroupBlockchain: string
+
+    @ApiPropertyOptional({type: String})
+    @IsOptional()
+    @IsString()
+    readonly nameEth: string
 
 }

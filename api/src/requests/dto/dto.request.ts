@@ -29,4 +29,9 @@ export class JoinDTO{
     @IsBoolean()
     readonly accept: boolean
 
+    @ApiPropertyOptional({type: Boolean})
+    @IsOptional()
+    @IsBoolean()
+    readonly paying: boolean
+
 }

@@ -12,6 +12,9 @@ export const NotificationSchema = new Schema({
     message:        {type: String, required: false},
     channelId:      {type: String, required: false},
     channelName:    {type: String, required: false},
-    requester:      {type: Schema.Types.ObjectId, required: false}
+    requester:      {type: Schema.Types.ObjectId, required: false},
+    paying:         {type: Boolean, required: false},
+    inviteId:       {type: String, required: false},
+    channelPrice:   {type: String, required: false}
 }, {timestamps: true})
 NotificationSchema.index({createdAt: 1}, {expireAfterSeconds: 604800})

@@ -47,6 +47,9 @@ export class UserInfoDTO{
 
     @ApiProperty({type: String})
     readonly platformUpdated: string
+
+    @ApiProperty({type: Boolean})
+    readonly hasSBT: boolean
 }
 
 export class LatestUserDTO {
@@ -80,7 +83,7 @@ export class UsersCountDTO {
 }
 
 export function formatToUserDTO(user: User, ref): UserInfoDTO{
-    const {id, userName, picture, isAdmin, createdAt, description, fcmToken, wallet, following, apnToken, updatedAt, platformCreated, platformUpdated} = user
+    const {id, userName, picture, isAdmin, createdAt, description, fcmToken, wallet, following, apnToken, updatedAt, platformCreated, platformUpdated, hasSBT} = user
     const isInFollowing = ref ? ref.following.includes(id) : undefined;
     const nickname = ref ? ref.nicknames.get(wallet) : undefined;
 
@@ -99,7 +102,8 @@ export function formatToUserDTO(user: User, ref): UserInfoDTO{
         isInFollowing: isInFollowing,
         updatedAt,
         platformCreated,
-        platformUpdated
+        platformUpdated,
+        hasSBT
     }
 }
 

@@ -17,4 +17,5 @@ export interface User{
     updatedAt: Date;
     platformCreated: string;
     platformUpdated: string;
+    hasSBT: boolean;
 }

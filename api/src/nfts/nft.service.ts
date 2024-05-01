@@ -52,7 +52,7 @@ export class NFTService{
         const alchemy = new Alchemy(settings)
         var pageKey 
         do{
-             var nftsIter = await alchemy.nft.getNftsForOwner(user.wallet, { excludeFilters: [NftFilters.AIRDROPS, NftFilters.SPAM],
+             var nftsIter = await alchemy.nft.getNftsForOwner(user.wallet, { excludeFilters: [],
                 omitMetadata: false,
                 orderBy: NftOrdering.TRANSFERTIME, pageKey: pageKey})
                 for(const nft of nftsIter.ownedNfts){
@@ -116,7 +116,7 @@ export class NFTService{
         const alchemy = new Alchemy(settings)
         var pageKey 
         do{
-             var nftsIter = await alchemy.nft.getNftsForOwner(user.wallet, { excludeFilters: [NftFilters.AIRDROPS, NftFilters.SPAM],
+             var nftsIter = await alchemy.nft.getNftsForOwner(user.wallet, { excludeFilters: [],
                 omitMetadata: false,
                 orderBy: NftOrdering.TRANSFERTIME, pageKey: pageKey})
                 for(const nft of nftsIter.ownedNfts){
@@ -132,7 +132,7 @@ export class NFTService{
      
         var groupedBy = _.groupBy(nfts, "contract.address")
         for(const key in groupedBy){
-            nftsFinals.push({ownedBy: user.id, title: groupedBy[key][0].contract.openSea.collectionName , images: groupedBy[key].map(e => e.media[0].thumbnail ?? e.media[0].gateway), collectionImage: groupedBy[key][0].contract.openSea.imageUrl, contractAddress: key, floorPrice: groupedBy[key][0].contract.openSea.floorPrice ?? 0})
+            nftsFinals.push({ownedBy: user.id, title: groupedBy[key][0].contract.openSea.collectionName , images: groupedBy[key].map(e => e.media[0].thumbnail ?? e.media[0].gateway), collectionImage: groupedBy[key][0].contract.openSea.imageUrl, contractAddress: key, floorPrice: groupedBy[key][0].contract.openSea.floorPrice ?? 0, isFav: false})
         }
 
         await this.createMultipleCollections(nftsFinals, user)

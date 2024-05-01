@@ -23,14 +23,22 @@ export class InboxService{
             var channel : Channel
             if(!inboxCreationDTO.isConv){
               if(inboxCreationDTO.picOfGroup){
-                channel = serverClient.channel("try", inboxCreationDTO.idChannel, {members: inboxCreationDTO.members, created_by_id: inboxCreationDTO.createdBy, isConv: inboxCreationDTO.isConv, nameOfGroup: inboxCreationDTO.nameOfGroup, picOfGroup: inboxCreationDTO.picOfGroup, isGroupPrivate: inboxCreationDTO.isGroupPrivate, isGroupVisible: inboxCreationDTO.isGroupVisible, isGroupPaying: inboxCreationDTO.isGroupPaying})
-              } else channel = serverClient.channel("try", inboxCreationDTO.idChannel, {members: inboxCreationDTO.members, created_by_id: inboxCreationDTO.createdBy, isConv: inboxCreationDTO.isConv, nameOfGroup: inboxCreationDTO.nameOfGroup, isGroupPrivate: inboxCreationDTO.isGroupPrivate, isGroupVisible: inboxCreationDTO.isGroupVisible, isGroupPaying: inboxCreationDTO.isGroupPaying})
+                channel = serverClient.channel("try", inboxCreationDTO.idChannel, {members: inboxCreationDTO.members, created_by_id: inboxCreationDTO.createdBy, isConv: inboxCreationDTO.isConv, nameOfGroup: inboxCreationDTO.nameOfGroup, picOfGroup: inboxCreationDTO.picOfGroup, isGroupPrivate: inboxCreationDTO.isGroupPrivate, isGroupVisible: inboxCreationDTO.isGroupVisible})
+              } else channel = serverClient.channel("try", inboxCreationDTO.idChannel, {members: inboxCreationDTO.members, created_by_id: inboxCreationDTO.createdBy, isConv: inboxCreationDTO.isConv, nameOfGroup: inboxCreationDTO.nameOfGroup, isGroupPrivate: inboxCreationDTO.isGroupPrivate, isGroupVisible: inboxCreationDTO.isGroupVisible})
             } else channel = serverClient.channel("try", {members: inboxCreationDTO.members, created_by_id: inboxCreationDTO.createdBy, isConv: inboxCreationDTO.isConv})
             await channel.watch()
             if(inboxCreationDTO.message) await channel.sendMessage({text: inboxCreationDTO.message, user_id: inboxCreationDTO.createdBy})
             idChannel = channel.id;
         } 
         else{
+          if(inboxCreationDTO.isGroupPaying){
+            if(inboxCreationDTO.picOfGroup){
+              channel = serverClient.channel("try", inboxCreationDTO.idChannel, {created_by_id: inboxCreationDTO.createdBy, isConv: false, nameOfGroup: inboxCreationDTO.nameOfGroup, picOfGroup: inboxCreationDTO.picOfGroup, isGroupPrivate: inboxCreationDTO.isGroupPrivate, isGroupVisible: inboxCreationDTO.isGroupVisible, isGroupPaying: true, price: inboxCreationDTO.price, tokenAccepted: inboxCreationDTO.tokenAccepted, idGroupBlockChain: inboxCreationDTO.idGroupBlockchain})
+            } else channel = serverClient.channel("try", inboxCreationDTO.idChannel, {created_by_id: inboxCreationDTO.createdBy, isConv: false, nameOfGroup: inboxCreationDTO.nameOfGroup, isGroupPrivate: inboxCreationDTO.isGroupPrivate, isGroupVisible: inboxCreationDTO.isGroupVisible, isGroupPaying: true, price: inboxCreationDTO.price, tokenAccepted: inboxCreationDTO.tokenAccepted, idGroupBlockChain: inboxCreationDTO.idGroupBlockchain})
+            await channel.watch()
+            await channel.addModerators([inboxCreationDTO.createdBy])
+            idChannel = channel.id;
+          }  else {
             const exists = await this.inboxModel.find({wallets: inboxCreationDTO.wallets})
         if(exists.length > 0) {
             if(inboxCreationDTO.message) await this.inboxModel.findOneAndUpdate({wallets: inboxCreationDTO.wallets}, {$addToSet: {messages: inboxCreationDTO.message}}, {new: true, useFindAndModify: false})
@@ -38,14 +46,15 @@ export class InboxService{
             if(inboxCreationDTO.message) await channel[0].sendMessage({text: inboxCreationDTO.message, user_id: inboxCreationDTO.createdBy})
             idChannel = channel[0].id;
         } else { 
-            const nameEth = await this.queryEthAddressforENS(inboxCreationDTO.wallets.filter((e) => e != user.wallet)[0])
             if(inboxCreationDTO.message) await new this.inboxModel({idChannel: inboxCreationDTO.idChannel, wallets: inboxCreationDTO.wallets, createdBy: inboxCreationDTO.createdBy, messages: [inboxCreationDTO.message]}).save()
-            const channel = serverClient.channel("try", inboxCreationDTO.idChannel, {created_by_id: inboxCreationDTO.createdBy, ens: nameEth,  wallet: inboxCreationDTO.wallets.filter((e) => e != user.wallet)[0], isConv: true})
+            const channel = serverClient.channel("try", inboxCreationDTO.idChannel, {created_by_id: inboxCreationDTO.createdBy, ens: inboxCreationDTO.nameEth,  wallet: inboxCreationDTO.wallets.filter((e) => e != user.wallet)[0], isConv: true})
             await channel.watch()
             if(inboxCreationDTO.message) await channel.sendMessage({text: inboxCreationDTO.message, user_id: inboxCreationDTO.createdBy})
             idChannel = channel.id;
+        
         } 
         }
+      }
         return idChannel;
     }
 
@@ -68,6 +77,15 @@ export class InboxService{
             await this.inboxModel.deleteOne({idChannel: inbox.idChannel})
             }
         }
+    }
+
+    async deleteChannels(){
+      const apiKey = "mhgk84t9jfnt"
+      const secret = "gnru55ab95pahvtrczw6sk2segwa7gyzskm3xs5pw9hfk6hpkqfwaatd64q7svbd"
+      const serverClient = StreamChat.getInstance(apiKey, secret)
+      const channels = await serverClient.queryChannels({isGroupPaying: {$eq: true}},{},{limit: 1000});
+      const size = channels.length
+      //await serverClient.deleteChannels(channels.map(e => e.cid), {hard_delete: true})
     }
 
     async deleteInbox(id: string, user: User){
@@ -106,7 +124,7 @@ export class InboxService{
 
       async queryEthAddressforENS(wallet: string){
         const result : GraphQLResponse = await request('https://api.thegraph.com/subgraphs/name/ensdomains/ens', this.getQueryETHAddressForENS(wallet))
-        return result?.domains ? result?.domains[0].name : "0";
+        return result?.domains ? result?.domains[0] != undefined ? result?.domains[0].name : "0" : "0";
       }
 
 }

@@ -218,6 +218,10 @@ async createUserWithWallet(wallet: String, ens: String, platform: String) {
       })
        const kk = Object.keys(updateUserInfoDTO.nicknames).forEach(element => console.log(element))
     }
+    if(updateUserInfoDTO.hasSBT){
+      user.hasSBT = updateUserInfoDTO.hasSBT;
+    }
+    
     const res = await user.save();
     return formatToUserDTO(res, res);
   }
