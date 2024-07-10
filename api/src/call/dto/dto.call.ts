@@ -22,6 +22,9 @@ export class CallCreationDTO{
     readonly channel: string
 }
 
+
+
+
 export class CallModificationDTO{
 
     @ApiProperty({type: String})

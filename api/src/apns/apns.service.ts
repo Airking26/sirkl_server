@@ -27,8 +27,8 @@ export class ApnsService {
     let provider = new Apn.Provider({
       token: {
         key: path.join(__dirname, "..", "..", "certs", "AuthKey_SC5SCPP57W.p8"),
-        keyId: "SC5SCPP57W",
-        teamId: "5H8SVPW79X",
+        keyId: process.env.VOIP_KEY_ID,
+        teamId: process.env.VOIP_TEAM_ID,
     },
     production: true
     })

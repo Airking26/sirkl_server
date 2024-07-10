@@ -23,11 +23,6 @@ export class AuthController {
         return this.authService.handleRefreshToken(request.user)
     }
 
-    @Get('createUAW')
-    createUAW(){
-      return this.authService.createUAW()
-    }
-
     @ApiOperation({summary: 'Log user out'})
     @ApiCreatedResponse({type: UserInfoDTO})
     @ApiNotFoundResponse({description: 'User not found'})
@@ -35,6 +30,14 @@ export class AuthController {
     @Post('logout')
     logOut(@Req() request){
         return this.authService.signUserOut(request.user)
+    }
+
+    @ApiOperation({summary: "Check beta code"})
+    @ApiParam({name: 'code', description: 'code', allowEmptyValue: false})
+    @ApiOkResponse({type: Boolean})
+    @Get('check_beta_code/:code')
+    missedCallNotification(@Param('code') code: string, @Req() request) {
+      return this.authService.checkBetaCode(code);
     }
 
 

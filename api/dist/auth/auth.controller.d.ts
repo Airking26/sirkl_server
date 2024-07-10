@@ -6,8 +6,8 @@ export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
     refreshAccessToken(request: any): Promise<RefreshTokenDTO>;
-    createUAW(): Promise<void>;
     logOut(request: any): Promise<UserInfoDTO>;
+    missedCallNotification(code: string, request: any): boolean;
     verifySignature(walletConnectDTO: WalletConnectDTO): Promise<SignInSuccessDTO>;
     createWalletOnTheFly(): Promise<void>;
 }

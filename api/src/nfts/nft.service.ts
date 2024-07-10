@@ -42,7 +42,7 @@ export class NFTService{
         const res = await this.nftModel.find({ownedBy: user})
 
         const settings = {
-            apiKey: 'ELrNU9K6I9RNfXbIkJqq6H6NeoXNbF10',
+            apiKey: process.env.ALCHEMY_API_KEY,
             network: Network.ETH_MAINNET
           };
 
@@ -106,7 +106,7 @@ export class NFTService{
 
     async getAllNFTs(user: User){
         const settings = {
-            apiKey: 'ELrNU9K6I9RNfXbIkJqq6H6NeoXNbF10',
+            apiKey: process.env.ALCHEMY_API_KEY,
             network: Network.ETH_MAINNET
           };
 

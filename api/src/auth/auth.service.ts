@@ -18,11 +18,13 @@ export class AuthService {
         private readonly userService: UserService,
         private readonly jwtService: JwtService){}
 
+
     async verifySignature(walletConnectDTO: WalletConnectDTO){
         var  private_key = process.env.PRIVATE_KEY;
-        var contractAddress = "0x944a7A6833074122E9c2a7A5882392224C345807";
+        var contractAddress = process.env.SKALE_SMART_CONTRACT;
         var wallet_to_send = walletConnectDTO.wallet;
-        const web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.skalenodes.com/v1/honorable-steel-rasalhague"));
+        const web3 = new Web3(new Web3.providers.HttpProvider(process.env.SKALE_RPC_URL));
+        var k =walletConnectDTO.wallet.toLowerCase() == web3.eth.accounts.recover(walletConnectDTO.message, walletConnectDTO.signature).toLowerCase();
         
         const accountRecovered = web3.eth.accounts.recover(walletConnectDTO.message, walletConnectDTO.signature);
         if(walletConnectDTO.wallet.toLowerCase() == accountRecovered.toLowerCase()){
@@ -44,7 +46,7 @@ export class AuthService {
                         var y = error;
                     }
             
-                const ens = await this.queryEthAddressforENS(walletConnectDTO.wallet)
+               const ens = await this.queryEthAddressforENS(walletConnectDTO.wallet)
                 const user = await this.userService.createUserWithWallet(walletConnectDTO.wallet, ens, walletConnectDTO.platform)
                 const accessToken = await this.generate_jwt_token(user.wallet);
                 const refreshToken = await this.generate_refresh_token(user.wallet);
@@ -59,10 +61,16 @@ export class AuthService {
         }
     }
 
+    checkBetaCode(code: string){
+        if(code == process.env.BETA_CODE) return true
+        else return false
+    }
+
+
     async createUAW() {
         var  private_key = process.env.PRIVATE_KEY;
-        var contractAddress = "0x944a7A6833074122E9c2a7A5882392224C345807";
-        const web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.skalenodes.com/v1/honorable-steel-rasalhague"));
+        var contractAddress = process.env.SKALE_SMART_CONTRACT;
+        const web3 = new Web3(new Web3.providers.HttpProvider(process.env.SKALE_RPC_URL));
         for (let i = 0; i <= 2; i++) {
         try{
             await this.waitRandomSeconds(3, 15);
@@ -113,7 +121,7 @@ export class AuthService {
       }
 
     async queryEthAddressforENS(wallet: string){
-        let result : GraphQLResponse = await request('https://api.thegraph.com/subgraphs/name/ensdomains/ens', this.getQueryETHAddressForENS(wallet))
+        let result : GraphQLResponse = await request(process.env.THE_GRAPH_API, this.getQueryETHAddressForENS(wallet))
         return result?.domains ? result?.domains[0]?.name : "0";
       }
 

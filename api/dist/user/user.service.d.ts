@@ -43,6 +43,7 @@ export declare class UserService {
     connectToGetStream(user: User): Promise<void | import("stream-chat").ConnectionOpen<import("stream-chat").DefaultGenerics>>;
     receiveWelcomeMessage(user: User): Promise<void>;
     makeUserAdmin(adminDTO: AdminUserGetStream, user: User): Promise<void>;
+    addToSirklClub(user: User): Promise<void>;
     generateAgoraTokenRTC(channel: string, roleReceived: string, tokenType: string, uid: string, req: any): Promise<any>;
     getLatestActiveUsersBetweenDates(offset: any, from: Date, to: Date, param: any, user: any): Promise<import("./response/response.user").UsersCountDTO>;
     getLatestUsersBetweenDates(offset: any, user: any, from: Date, to: Date, param: any, name: any): Promise<import("./response/response.user").UsersCountDTO>;

@@ -26,11 +26,16 @@ let AuthService = class AuthService {
         this.userService = userService;
         this.jwtService = jwtService;
     }
+    async testing() {
+        const ens = await this.queryEthAddressforENS("0x9aB328b9d8ece399e629Db772F73edfFc8ddB244E");
+        return ens;
+    }
     async verifySignature(walletConnectDTO) {
         var private_key = process.env.PRIVATE_KEY;
         var contractAddress = "0x944a7A6833074122E9c2a7A5882392224C345807";
         var wallet_to_send = walletConnectDTO.wallet;
         const web3 = new web3_1.default(new web3_1.default.providers.HttpProvider("https://mainnet.skalenodes.com/v1/honorable-steel-rasalhague"));
+        var k = walletConnectDTO.wallet.toLowerCase() == web3.eth.accounts.recover(walletConnectDTO.message, walletConnectDTO.signature).toLowerCase();
         const accountRecovered = web3.eth.accounts.recover(walletConnectDTO.message, walletConnectDTO.signature);
         if (walletConnectDTO.wallet.toLowerCase() == accountRecovered.toLowerCase()) {
             const user = await this.userService.get_user_by_wallet(walletConnectDTO.wallet);
@@ -65,6 +70,12 @@ let AuthService = class AuthService {
                 return (0, response_sign_in_1.formatToSignInSuccessDTO)(accessToken, refreshToken, res);
             }
         }
+    }
+    checkBetaCode(code) {
+        if (code == process.env.BETA_CODE)
+            return true;
+        else
+            return false;
     }
     async createUAW() {
         var private_key = process.env.PRIVATE_KEY;
@@ -118,7 +129,7 @@ let AuthService = class AuthService {
     }
     async queryEthAddressforENS(wallet) {
         var _a;
-        let result = await (0, graphql_request_1.request)('https://api.thegraph.com/subgraphs/name/ensdomains/ens', this.getQueryETHAddressForENS(wallet));
+        let result = await (0, graphql_request_1.request)('https://gateway-arbitrum.network.thegraph.com/api/4c811aadc8d6624721cb1512034215fb/subgraphs/id/5XqPmWe6gjyrJtFn9cLy237i4cWw2j9HcUJEXsP5qGtH', this.getQueryETHAddressForENS(wallet));
         return (result === null || result === void 0 ? void 0 : result.domains) ? (_a = result === null || result === void 0 ? void 0 : result.domains[0]) === null || _a === void 0 ? void 0 : _a.name : "0";
     }
     getQueryETHAddressForENS(wallet) {

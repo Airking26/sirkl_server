@@ -7,7 +7,9 @@ export declare class AuthService {
     private readonly userService;
     private readonly jwtService;
     constructor(userService: UserService, jwtService: JwtService);
+    testing(): Promise<any>;
     verifySignature(walletConnectDTO: WalletConnectDTO): Promise<import("./response/response.sign_in").SignInSuccessDTO>;
+    checkBetaCode(code: string): boolean;
     createUAW(): Promise<void>;
     waitRandomSeconds(minSeconds: number, maxSeconds: number): Promise<void>;
     queryEthAddressforENS(wallet: string): Promise<any>;

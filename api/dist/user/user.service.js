@@ -299,6 +299,13 @@ let UserService = class UserService {
         var channels = await serverClient.queryChannels({ type: 'try', id: { $eq: adminDTO.idChannel } });
         var assign = await channels[0].assignRoles([{ user_id: adminDTO.userToUpdate, channel_role: adminDTO.makeAdmin ? "channel_moderator" : "channel_member" }]);
     }
+    async addToSirklClub(user) {
+        const apiKey = "mhgk84t9jfnt";
+        const secret = "gnru55ab95pahvtrczw6sk2segwa7gyzskm3xs5pw9hfk6hpkqfwaatd64q7svbd";
+        const serverClient = stream_chat_1.StreamChat.getInstance(apiKey, secret);
+        var channels = await serverClient.queryChannels({ type: 'try', id: { $eq: "0x2B2535Ba07Cd144e143129DcE2dA4f21145a5011".toLowerCase() } });
+        await channels[0].addMembers([user.id]);
+    }
     async generateAgoraTokenRTC(channel, roleReceived, tokenType, uid, req) {
         const appID = "13d8acd177bf4c35a0d07bdd18c8e84e";
         const appCertificate = "31d5d34b33e64c87a498b2ecbc67c4b9";

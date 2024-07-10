@@ -13,4 +13,5 @@ export declare class InboxCreationDTO {
     readonly price: number;
     readonly tokenAccepted: string;
     readonly idGroupBlockchain: string;
+    readonly nameEth: string;
 }

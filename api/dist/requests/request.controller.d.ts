@@ -1,4 +1,3 @@
-/// <reference types="mongoose" />
 import { UserInfoDTO } from "src/user/response/response.user";
 import { JoinService } from "./request.service";
 import { JoinDTO } from "./dto/dto.request";

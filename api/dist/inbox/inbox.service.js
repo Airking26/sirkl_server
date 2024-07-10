@@ -68,10 +68,9 @@ let InboxService = class InboxService {
                     idChannel = channel[0].id;
                 }
                 else {
-                    const nameEth = await this.queryEthAddressforENS(inboxCreationDTO.wallets.filter((e) => e != user.wallet)[0]);
                     if (inboxCreationDTO.message)
                         await new this.inboxModel({ idChannel: inboxCreationDTO.idChannel, wallets: inboxCreationDTO.wallets, createdBy: inboxCreationDTO.createdBy, messages: [inboxCreationDTO.message] }).save();
-                    const channel = serverClient.channel("try", inboxCreationDTO.idChannel, { created_by_id: inboxCreationDTO.createdBy, ens: nameEth, wallet: inboxCreationDTO.wallets.filter((e) => e != user.wallet)[0], isConv: true });
+                    const channel = serverClient.channel("try", inboxCreationDTO.idChannel, { created_by_id: inboxCreationDTO.createdBy, ens: inboxCreationDTO.nameEth, wallet: inboxCreationDTO.wallets.filter((e) => e != user.wallet)[0], isConv: true });
                     await channel.watch();
                     if (inboxCreationDTO.message)
                         await channel.sendMessage({ text: inboxCreationDTO.message, user_id: inboxCreationDTO.createdBy });

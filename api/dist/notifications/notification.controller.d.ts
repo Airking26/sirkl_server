@@ -1,4 +1,3 @@
-/// <reference types="mongoose" />
 import { NotificationService } from './notification.service';
 import { NotificationInfoDTO } from './response/response.notification';
 import { NotificationToAllDTO } from 'src/apns/dto/dto.notification_to_all';

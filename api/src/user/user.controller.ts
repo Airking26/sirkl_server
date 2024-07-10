@@ -116,6 +116,13 @@ export class UserController {
     return this.userService.makeUserAdmin(adminUserGetStream, request.user)
   }
 
+  @ApiOperation({summary: "Add user to Sirkl Club"})
+  @ApiParam({ name: "id", description: "User id", allowEmptyValue: false })
+  @Get("add_user_to_sirkl_club/:id")
+  addUserToSirklClub(@Param("id") id: string, @Req() request){
+    return this.userService.addToSirklClub(request.user)
+  }
+
   @ApiOperation({summary: "receive welcome message"})
   @Get("me/welcome_message")
   getWelcomingMessage(@Req() request){

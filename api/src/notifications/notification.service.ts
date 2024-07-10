@@ -69,8 +69,8 @@ export class NotificationService{
         const body = me.userName != "" ? me.userName  + " has invited you to join group " + data.channelName + " for " + data.channelPrice + "ETH" : (me.wallet.substring(0, 6) + "..." + (me.wallet.substring(me.wallet.length - 4))) + " has invited you to join group " + data.channelName + " for " + data.channelPrice + "ETH"
         const him = await this.userModel.findById(data.idUser)
         if(data.paying){
-            const apiKey = "mhgk84t9jfnt"
-            const secret = "gnru55ab95pahvtrczw6sk2segwa7gyzskm3xs5pw9hfk6hpkqfwaatd64q7svbd"
+            const apiKey = process.env.STREAM_API_KEY
+            const secret = process.env.STREAM_SECRET
             const serverClient = StreamChat.getInstance(apiKey, secret)
             const channels = await serverClient.queryChannels({type: 'try', id: data.channelId}, {}, {limit: 1})
             let usersAwaiting: string[] | unknown = null

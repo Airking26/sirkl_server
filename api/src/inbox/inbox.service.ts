@@ -15,8 +15,8 @@ export class InboxService{
     constructor(@InjectModel("Inbox") private readonly inboxModel: Model<Inbox>, private readonly userService: UserService){}
 
     async createChannel(inboxCreationDTO : InboxCreationDTO, user){
-        const apiKey = "mhgk84t9jfnt"
-        const secret = "gnru55ab95pahvtrczw6sk2segwa7gyzskm3xs5pw9hfk6hpkqfwaatd64q7svbd"
+        const apiKey = process.env.STREAM_API_KEY
+        const secret = process.env.STREAM_SECRET
         const serverClient = StreamChat.getInstance(apiKey, secret)
         var idChannel;
         if(inboxCreationDTO.members){
@@ -59,8 +59,8 @@ export class InboxService{
     }
 
     async updateChannel(user: User){
-        const apiKey = "mhgk84t9jfnt"
-        const secret = "gnru55ab95pahvtrczw6sk2segwa7gyzskm3xs5pw9hfk6hpkqfwaatd64q7svbd"
+      const apiKey = process.env.STREAM_API_KEY
+      const secret = process.env.STREAM_SECRET
         const serverClient = StreamChat.getInstance(apiKey, secret)
         const inboxs = await this.inboxModel.find({wallets: user.wallet})
         for(let item of inboxs){
@@ -80,8 +80,8 @@ export class InboxService{
     }
 
     async deleteChannels(){
-      const apiKey = "mhgk84t9jfnt"
-      const secret = "gnru55ab95pahvtrczw6sk2segwa7gyzskm3xs5pw9hfk6hpkqfwaatd64q7svbd"
+      const apiKey = process.env.STREAM_API_KEY
+      const secret = process.env.STREAM_SECRET
       const serverClient = StreamChat.getInstance(apiKey, secret)
       const channels = await serverClient.queryChannels({isGroupPaying: {$eq: true}},{},{limit: 1000});
       const size = channels.length
@@ -118,12 +118,12 @@ export class InboxService{
 
       async queryENSforETHaddress(ensAddress: string){
         if (!ensAddress || !ensAddress.toLowerCase().includes('.eth')) return '0'
-        const result: GraphQLResponse = await request('https://api.thegraph.com/subgraphs/name/ensdomains/ens', this.getQueryENSForETHAddress(ensAddress))
+        const result: GraphQLResponse = await request(process.env.THE_GRAPH_API, this.getQueryENSForETHAddress(ensAddress))
         return result?.domains  ? result?.domains[0].owner.id.toLowerCase() : "0";
       }
 
       async queryEthAddressforENS(wallet: string){
-        const result : GraphQLResponse = await request('https://api.thegraph.com/subgraphs/name/ensdomains/ens', this.getQueryETHAddressForENS(wallet))
+        const result : GraphQLResponse = await request(process.env.THE_GRAPH_API, this.getQueryETHAddressForENS(wallet))
         return result?.domains ? result?.domains[0] != undefined ? result?.domains[0].name : "0" : "0";
       }
 

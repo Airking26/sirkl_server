@@ -30,11 +30,11 @@ let AuthController = class AuthController {
     refreshAccessToken(request) {
         return this.authService.handleRefreshToken(request.user);
     }
-    createUAW() {
-        return this.authService.createUAW();
-    }
     logOut(request) {
         return this.authService.signUserOut(request.user);
+    }
+    missedCallNotification(code, request) {
+        return this.authService.checkBetaCode(code);
     }
     verifySignature(walletConnectDTO) {
         return this.authService.verifySignature(walletConnectDTO);
@@ -55,12 +55,6 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "refreshAccessToken", null);
 __decorate([
-    (0, common_1.Get)('createUAW'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "createUAW", null);
-__decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Log user out' }),
     (0, swagger_1.ApiCreatedResponse)({ type: response_user_1.UserInfoDTO }),
     (0, swagger_1.ApiNotFoundResponse)({ description: 'User not found' }),
@@ -71,6 +65,17 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "logOut", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: "Check beta code" }),
+    (0, swagger_1.ApiParam)({ name: 'code', description: 'code', allowEmptyValue: false }),
+    (0, swagger_1.ApiOkResponse)({ type: Boolean }),
+    (0, common_1.Get)('check_beta_code/:code'),
+    __param(0, (0, common_1.Param)('code')),
+    __param(1, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "missedCallNotification", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "verify signature" }),
     (0, common_1.Post)("verifySignature"),

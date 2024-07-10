@@ -254,8 +254,8 @@ async createUserWithWallet(wallet: String, ens: String, platform: String) {
   }
 
   async deleteUser(userID: string, user: User) {
-    const apiKey = "mhgk84t9jfnt"
-    const secret = "gnru55ab95pahvtrczw6sk2segwa7gyzskm3xs5pw9hfk6hpkqfwaatd64q7svbd"
+    const apiKey = process.env.STREAM_API_KEY
+    const secret = process.env.STREAM_SECRET
     const serverClient = StreamChat.getInstance(apiKey, secret)
 
     if (user.id == userID || user.isAdmin) {
@@ -309,15 +309,15 @@ async createUserWithWallet(wallet: String, ens: String, platform: String) {
   }
 
   async connectToGetStream(user: User){
-    const apiKey = "mhgk84t9jfnt"
-    const secret = "gnru55ab95pahvtrczw6sk2segwa7gyzskm3xs5pw9hfk6hpkqfwaatd64q7svbd"
+    const apiKey = process.env.STREAM_API_KEY
+    const secret = process.env.STREAM_SECRET
     const serverClient = StreamChat.getInstance(apiKey, secret)
     return await serverClient.connectUser({id: user.id, name: user.userName ?? user.wallet, extraData: {'userDTO' : formatToUserDTO(user, user)}}, this.generateStreamChatToken(user))
   }
 
   async receiveWelcomeMessage(user: User){
-    const apiKey = "mhgk84t9jfnt"
-    const secret = "gnru55ab95pahvtrczw6sk2segwa7gyzskm3xs5pw9hfk6hpkqfwaatd64q7svbd"
+    const apiKey = process.env.STREAM_API_KEY
+    const secret = process.env.STREAM_SECRET
     const serverClient = StreamChat.getInstance(apiKey, secret)
     const channel = serverClient.channel("try", {members: [user.id, "63f78a6188f7d4001f68699a"], created_by_id: "63f78a6188f7d4001f68699a", isConv: true})
     await channel.watch();
@@ -325,16 +325,24 @@ async createUserWithWallet(wallet: String, ens: String, platform: String) {
   }
 
   async makeUserAdmin(adminDTO : AdminUserGetStream, user: User){
-    const apiKey = "mhgk84t9jfnt"
-    const secret = "gnru55ab95pahvtrczw6sk2segwa7gyzskm3xs5pw9hfk6hpkqfwaatd64q7svbd"
+    const apiKey = process.env.STREAM_API_KEY
+    const secret = process.env.STREAM_SECRET
     const serverClient = StreamChat.getInstance(apiKey, secret)
     var channels : Channel[] = await serverClient.queryChannels({ type: 'try', id: { $eq: adminDTO.idChannel } })
     var assign = await channels[0].assignRoles([{user_id: adminDTO.userToUpdate, channel_role: adminDTO.makeAdmin ? "channel_moderator" : "channel_member"}])
   }
 
+  async addToSirklClub(user: User){
+    const apiKey = process.env.STREAM_API_KEY
+    const secret = process.env.STREAM_SECRET
+    const serverClient = StreamChat.getInstance(apiKey, secret)
+    var channels : Channel[] = await serverClient.queryChannels({ type: 'try', id: { $eq: "0x2B2535Ba07Cd144e143129DcE2dA4f21145a5011".toLowerCase() } })
+    await channels[0].addMembers([user.id])
+  }
+
   async generateAgoraTokenRTC(channel: string, roleReceived: string, tokenType: string, uid: string, req){
-    const appID = "13d8acd177bf4c35a0d07bdd18c8e84e"
-    const appCertificate = "31d5d34b33e64c87a498b2ecbc67c4b9"
+    const appID = process.env.AGORA_APP_ID
+    const appCertificate = process.env.AGORA_APP_CERTIFICATE
     let role;
     if (roleReceived === 'publisher') {
       role = RtcRole.PUBLISHER;

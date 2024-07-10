@@ -40,8 +40,8 @@ export class JoinService{
 
     async acceptDeclineRequest(data, me){
         if(data.accept){
-        const apiKey = "mhgk84t9jfnt"
-        const secret = "gnru55ab95pahvtrczw6sk2segwa7gyzskm3xs5pw9hfk6hpkqfwaatd64q7svbd"
+            const apiKey = process.env.STREAM_API_KEY
+            const secret = process.env.STREAM_SECRET
         const serverClient = StreamChat.getInstance(apiKey, secret)
         const channels = await serverClient.queryChannels({type: 'try', id: data.channelId}, {}, {limit: 1})
         var body

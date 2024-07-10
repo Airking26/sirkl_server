@@ -1,4 +1,3 @@
-/// <reference types="mongoose" />
 import { UpdateFcmDTO } from "./dto/dto.update_fcm";
 import { UpdateUserInfoDTO } from "./dto/dto.update_user";
 import { LatestUserDTO, UserInfoDTO, UsersCountDTO } from "./response/response.user";
@@ -18,6 +17,7 @@ export declare class UserController {
     retrieveStreamChatToken(request: any): string;
     connectToGetStream(request: any): Promise<void | import("stream-chat").ConnectionOpen<import("stream-chat").DefaultGenerics>>;
     changeAdminRole(adminUserGetStream: AdminUserGetStream, request: any): Promise<void>;
+    addUserToSirklClub(id: string, request: any): Promise<void>;
     getWelcomingMessage(request: any): Promise<void>;
     retrieveAgoraTokenRTC(request: any, channel: string, role: string, tokenType: string, uid: string): Promise<any>;
     getNewUsersBetweenDates(offset: string, body: LatestUserDTO, request: any): Promise<UsersCountDTO>;

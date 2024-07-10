@@ -58,6 +58,9 @@ let UserController = class UserController {
     changeAdminRole(adminUserGetStream, request) {
         return this.userService.makeUserAdmin(adminUserGetStream, request.user);
     }
+    addUserToSirklClub(id, request) {
+        return this.userService.addToSirklClub(request.user);
+    }
     getWelcomingMessage(request) {
         return this.userService.receiveWelcomeMessage(request.user);
     }
@@ -182,6 +185,16 @@ __decorate([
     __metadata("design:paramtypes", [dto_admin_1.AdminUserGetStream, Object]),
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "changeAdminRole", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: "Add user to Sirkl Club" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "User id", allowEmptyValue: false }),
+    (0, common_1.Get)("add_user_to_sirkl_club/:id"),
+    __param(0, (0, common_1.Param)("id")),
+    __param(1, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", void 0)
+], UserController.prototype, "addUserToSirklClub", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: "receive welcome message" }),
     (0, common_1.Get)("me/welcome_message"),
