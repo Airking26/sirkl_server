@@ -69,6 +69,29 @@ async createUserWithWallet(wallet: String, ens: String, platform: String) {
     return formatToUserDTO(res, user);
   }
 
+  async checkUserExists(wallet: string): Promise<boolean> {
+    try {
+      const user = await this.userModel.findOne({ wallet }).select('_id').lean();
+      return !!user;
+    } catch (error) {
+      console.error('Failed to check if user exists', error);
+      throw new Error('Database operation failed');
+    }
+  }
+
+  async returnIdBasedOnWallet(wallet: string){
+    const user = await this.userModel.findOne({ wallet : wallet }).exec();
+    if (!user) {
+      throw new Error('User not found');
+    }
+    return user.id; 
+  }
+
+  async isUsernameValid(userName: string){
+    const user = await  this.userModel.findOne({userName}).select('_id').lean();
+    return !user;
+  }
+
   async connectToWS(user){
     let socketMobile = null
     const api = "Xz8w4MK784c5p3sPjWY3HdQA87Z9TqCTB2jNzu34vsLhzk4cK5LG5x3a9R7uj8C8"
@@ -203,21 +226,25 @@ async createUserWithWallet(wallet: String, ens: String, platform: String) {
       throw new NotFoundException("USER_NOT_FOUND");
     }
 
-    user.description = updateUserInfoDTO.description;
+    if(updateUserInfoDTO.description){
+      user.description = updateUserInfoDTO.description;      
+    }
+
     if (updateUserInfoDTO.userName) {
       user.userName = updateUserInfoDTO.userName;
     }
+    
     if (updateUserInfoDTO.picture) {
       user.picture = updateUserInfoDTO.picture;
     }
+
     if(updateUserInfoDTO.nicknames){
-      const j = updateUserInfoDTO.nicknames
-      const js = Object.entries(j).forEach(entry => {
+      Object.entries(updateUserInfoDTO.nicknames).forEach(entry => {
         const [key, value] = entry;
         user.nicknames.set(key, value);
       })
-       const kk = Object.keys(updateUserInfoDTO.nicknames).forEach(element => console.log(element))
     }
+
     if(updateUserInfoDTO.hasSBT){
       user.hasSBT = updateUserInfoDTO.hasSBT;
     }
@@ -469,4 +496,73 @@ async getLatestUsersCountBetweenDates(user, from: Date, to: Date) {
 async changeUpdatedAt(wallet): Promise<User> {
   return this.userModel.findOneAndUpdate({wallet: wallet}, {updatedAt: new Date(Date.now())}, { new: true, useFindAndModify: false })
 }
+
+/*async detectStreamChatUsers() {
+  const apiKey = process.env.STREAM_API_KEY;
+  const secret = process.env.STREAM_SECRET;
+  const streamClient = StreamChat.getInstance(apiKey, secret, { timeout: 30000 });
+  const users = await this.userModel.find(); // Get all users from your collection
+
+  const totalUserCount = users.length;
+  console.log(`Total number of users: ${totalUserCount}`);
+
+  let nonStreamUserCount = 0;
+
+  for (let i = 0; i < users.length; i += 10) {
+    const batch = users.slice(i, i + 10);
+
+    const userIds = batch.map(user => user.id.toString());
+
+    try {
+      const streamUsers = await streamClient.queryUsers({ id: { $in: userIds } });
+
+      const streamUserIds = streamUsers.users.map(user => user.id);
+
+      const nonStreamUsers = batch.filter(user => !streamUserIds.includes(user.id.toString()));
+      nonStreamUserCount += nonStreamUsers.length;
+
+      // Create non-Stream users on Stream Chat
+      await Promise.all(nonStreamUsers.map(async (nonStreamUser) => {
+        try {
+          await streamClient.upsertUser({id: nonStreamUser.id.toString(), userDTO : formatToUserDTO(nonStreamUser, nonStreamUser)});
+          console.log(`Created user on Stream: ${nonStreamUser.id}`);
+        } catch (createError) {
+          console.error(`Error creating user ${nonStreamUser.id} on Stream:`, createError);
+        }
+      }));
+    } catch (error) {
+      console.error(`Error checking Stream Chat for users batch starting at ${i}:`, error);
+      // In case of failure, assume the whole batch is not in Stream Chat
+      nonStreamUserCount += batch.length;
+
+      // Create the entire batch if query fails
+      await Promise.all(batch.map(async (user) => {
+        try {
+          await streamClient.upsertUser({id: user.id.toString(), userDTO : formatToUserDTO(user, user)});
+          console.log(`Created user on Stream: ${user.id}`);
+        } catch (createError) {
+          console.error(`Error creating user ${user.id} on Stream:`, createError);
+        }
+      }));
+    }
+  }
+
+  console.log(`Count of users not in Stream Chat: ${nonStreamUserCount}`);
+  return { totalUserCount, nonStreamUserCount };
+}
+
+async test(value) {
+  this.detectStreamChatUsers().then(({ totalUserCount, nonStreamUserCount }) => {
+    console.log(`Total users: ${totalUserCount}, Non-Stream users: ${nonStreamUserCount}`);
+  });
+}
+
+async findExistingWallets(wallets: string[]): Promise<string[]> {
+  const users = await this.userModel.find({
+    wallet: { $in: wallets.map(wallet => wallet.toLowerCase()) }
+  }).exec();
+
+  return users.map(user => user.wallet);
+}*/
+
 }

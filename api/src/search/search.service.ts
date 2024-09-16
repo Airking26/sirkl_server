@@ -9,18 +9,48 @@ export class SearchService{
 
     constructor(@InjectModel("User") private readonly userModel : Model<User>){}
 
-    async showMatchingUser(substring: string, offset: number, user: User){
-        var l = user.isAdmin ? 50 : 12
-        const users = await this.userModel.find({$or: [
-            {userName: {$regex: substring.replace(' ', ''), $options: 'i'}},
-            {userName: {$regex: substring, $options: 'i'}},
-            {wallet: {$regex: substring.replace(' ', ''), $options: 'i'}},
-            {wallet: {$regex: substring, $options: 'i'}},
-            //{$text: {$search: substring}}
-        ]})
-        //.sort({score:{$meta:"textScore"}})
-        .sort({"wallet": -1})
-        .skip(offset * l).limit(l)
-        return formatMultipleUsersDTO(users, user)
+    async showMatchingUser(substring: string, offset: number, user: User): Promise<any> {
+        const limit = user.isAdmin ? 50 : 12;
+        const regex = new RegExp(substring.replace(' ', ''), 'i');
+    
+        const users = await this.userModel.aggregate([
+            {
+                $match: {
+                    $and: [
+                        { wallet: { $ne: user.wallet } },
+                        {
+                            $or: [
+                                { userName: { $regex: regex } },
+                                { userName: { $regex: substring, $options: 'i' } },
+                                { wallet: { $regex: regex } },
+                                { wallet: { $regex: substring, $options: 'i' } },
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                $addFields: {
+                    startsWithSubstring: {
+                        $cond: {
+                            if: {
+                                $or: [
+                                    { $regexMatch: { input: "$userName", regex: `^${substring.replace(' ', '')}`, options: 'i' } },
+                                    { $regexMatch: { input: "$wallet", regex: `^${substring.replace(' ', '')}`, options: 'i' } }
+                                ]
+                            },
+                            then: 1,
+                            else: 0
+                        }
+                    },
+                    id: "$_id"
+                }
+            },
+            { $sort: { startsWithSubstring: -1 } },
+            { $skip: offset * limit },
+            { $limit: limit }
+        ]).exec();
+    
+        return formatMultipleUsersDTO(users, user);
     }
 }

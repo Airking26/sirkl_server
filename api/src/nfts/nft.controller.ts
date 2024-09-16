@@ -4,6 +4,7 @@ import { JwtAuthGuard } from "src/auth/passport/auth_guard";
 import { NFTCreationDTO, NFTModificationDTO } from "./dto/dto.nft_creation";
 import { NFTService } from "./nft.service";
 import { NFTInfoDTO } from "./response/response.nft";
+import { GroupCreationDTO } from "src/group/dto/dto.group";
 
 @ApiBearerAuth()
 @ApiTags("NFT")
@@ -32,13 +33,13 @@ export class NFTController{
     @ApiOperation({summary: "Get all nfts"})
     @Get('retrieveAll')
     getAllNfts(@Req() request){
-        return this.nftService.getAllNFTs(request.user);
+        return this.nftService.getAllAssets(request.user);
     }
 
     @ApiOperation({summary: "Update all nfts"})
     @Get('updateAll')
     updateAllNfts(@Req() request){
-        return this.nftService.updateNFT(request.user);
+        return this.nftService.updateAssets(request.user);
     }
 
     @ApiOperation({summary: "Get nfts with offset"})
@@ -48,7 +49,7 @@ export class NFTController{
     @ApiOkResponse({type: NFTInfoDTO, isArray: true})
     @Get('retrieve/:id/:favorite/:offset')
     retrieveFavNft(@Param("id") id: string, @Param("favorite") favorite : boolean, @Param("offset") offset: string, @Req() request){
-        return this.nftService.retrieveNFT(request.user, id, Number(offset), favorite);
+        return this.nftService.retrieveAssets(request.user, id, Number(offset), favorite);
     }
 
     @ApiOperation({ summary: "Modify NFT infos" })
@@ -56,7 +57,22 @@ export class NFTController{
     @ApiOkResponse({ type: NFTInfoDTO, isArray: false })
     @Patch("update")
     updateUser(@Req() request, @Body() data: NFTModificationDTO) {
-        return this.nftService.updateNFTStatus(data, request.user);
+        return this.nftService.updateAssetStatus(data, request.user);
+    }
+
+    @ApiOperation({ summary: "Retrieve contract addresses"})
+    @ApiOkResponse({ type: [String] })
+    @Get('retrieve_contract_address')
+    retrieveContractAddress(@Req() req){
+        return this.nftService.retrieveContractAddresses(req.user)
+    }
+
+    @ApiOperation({summary : "Retrieve group that can be created"})
+    @ApiParam({name: "offset"})
+    @ApiOkResponse({type: GroupCreationDTO, isArray: true})
+    @Get('retrieve/group_to_create/:offset')
+    retrieveGroupToCreate(@Param("offset") offset: string, @Req() request){
+        return this.nftService.retrieveAssetToCreateNewGroup(request.user, Number(offset))
     }
 
 }

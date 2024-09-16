@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { User } from "src/user/interface/interface.user";
 import { formatToUserDTO, UserInfoDTO } from "src/user/response/response.user";
 import { NFT } from "../interface/interface.nft";
@@ -22,17 +22,29 @@ export class NFTInfoDTO{
 
     @ApiProperty({type: Boolean})
     readonly isFav: boolean
+
+    @ApiProperty({type: Boolean})
+    readonly isNft: boolean
+
+    @ApiPropertyOptional({type: String})
+    readonly subtitle?: string
+
+    @ApiProperty({type: String})
+    readonly chain: string
 }
 
 export function formatToNFTInfoDTO(data: NFT): NFTInfoDTO{
-    const {id, title, images, collectionImage, contractAddress, isFav} = data
+    const {id, title, images, collectionImage, contractAddress, isFav, isNft, subtitle, chain} = data
     return{
         id,
         title,
         images,
         collectionImage,
         contractAddress,
-        isFav
+        isFav,
+        isNft,
+        subtitle,
+        chain
     }
 }
 

@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsNotEmpty, IsString, IsBoolean, IsNumber } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { IsArray, IsNotEmpty, IsString, IsBoolean, IsNumber, IsOptional } from "class-validator";
 
 
 export class NFTCreationDTO{
@@ -33,7 +33,23 @@ export class NFTCreationDTO{
     @IsNotEmpty()
     @IsNumber()
     readonly floorPrice: number
+
+    @ApiProperty({type: Boolean})
+    @IsNotEmpty()
+    @IsBoolean()
+    readonly isNft: boolean
+
+    @ApiPropertyOptional({type: String})
+    @IsOptional()
+    @IsString()
+    readonly subtitle?: string
+
+    @ApiProperty({type: String})
+    @IsNotEmpty()
+    @IsString()
+    readonly chain: string
 }
+
 
 export class NFTModificationDTO{
 

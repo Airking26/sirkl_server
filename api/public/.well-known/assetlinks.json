@@ -1,0 +1,5 @@
+[{
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target" : { "namespace": "android_app", "package_name": "io.airking.sirkl",
+                 "sha256_cert_fingerprints": ["BA:82:E6:3C:AF:34:EB:55:5F:47:F4:DE:C6:1F:68:7B:3F:0C:3A:5D:A5:59:43:F6:D7:BA:8B:D8:24:2F:04:22"] }
+  }]

@@ -3,14 +3,22 @@ import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags 
 import { JwtAuthGuard } from "src/auth/passport/auth_guard";
 import { InboxCreationDTO } from "./dto/dto.inbox";
 import { InboxService } from "./inbox.service";
+import { InboxExtensionDTO } from "./dto/dto.inbox_extension";
 
-@ApiBearerAuth()
 @ApiTags("Inbox")
-@UseGuards(JwtAuthGuard)
 @Controller("inbox")
 export class InboxController{
     constructor(private readonly inboxService: InboxService){}
 
+    /*@ApiOperation({summary: "send message through extension"})
+    @ApiBody({type: InboxExtensionDTO, required: true})
+    @Post('send-message-with-extension')
+    sendMessageWithExtension(@Body() inboxExtensionDTO : InboxExtensionDTO){
+        return this.inboxService.sendMessageWithExtension(inboxExtensionDTO);
+    }*/
+
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({summary: "create an inbox"})
     @ApiBody({type: InboxCreationDTO, required: true})
     @ApiOkResponse({type: String})
@@ -19,12 +27,16 @@ export class InboxController{
         return this.inboxService.createChannel(inboxCreationDTO, request.user)
     }
 
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({summary: "update inboxes"})
     @Get("update")
     updateInbox(@Req() request){
         return this.inboxService.updateChannel(request.user)
     }
 
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({summary: "retrieve ETH address from ENS"})
     @ApiParam({name : 'ens'})
     @Get("eth_from_ens/:ens")
@@ -32,6 +44,8 @@ export class InboxController{
         return this.inboxService.queryENSforETHaddress(ens)
     }
 
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({summary: "retrieve ENS address from Wallet"})
     @ApiParam({name : 'wallet'})
     @Get("ens_from_eth/:wallet")
@@ -39,6 +53,8 @@ export class InboxController{
         return this.inboxService.queryEthAddressforENS(wallet)
     }
 
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({summary : "Delete inbox"})
     @ApiParam({name: "id", description: "Id channel"})
     @Delete('delete/:id')
@@ -46,11 +62,14 @@ export class InboxController{
         return this.inboxService.deleteInbox(id, request.user)
     }
 
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({summary: 'delete channels'})
     @Delete("deleteChannels")
     deleteChannels(@Req() request){
         return this.inboxService.deleteChannels()
     }
+
 
     /*@ApiOperation({summary: "retrieve inboxes"})
     @ApiParam({ name: "offset", description: "offset", allowEmptyValue: false })

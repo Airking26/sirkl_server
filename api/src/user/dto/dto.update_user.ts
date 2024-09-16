@@ -9,20 +9,21 @@ export class UpdateUserInfoDTO{
     readonly userName?: string
 
     @ApiPropertyOptional({type: String})
+    @IsString()
     @IsOptional()
-    readonly picture: string
+    readonly picture?: string
 
     @ApiPropertyOptional({type: String})
     @IsString()
     @IsOptional()
-    readonly description: string
+    readonly description?: string
 
     @ApiPropertyOptional({type: Boolean})
     @IsBoolean()
     @IsOptional()
-    readonly hasSBT: boolean
+    readonly hasSBT?: boolean
 
     @ApiPropertyOptional({type: Map})
     @IsOptional()
-    readonly nicknames: Map<String, String>
+    readonly nicknames?: Map<String, String>
 }

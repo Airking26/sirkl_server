@@ -36,8 +36,16 @@ export class AuthController {
     @ApiParam({name: 'code', description: 'code', allowEmptyValue: false})
     @ApiOkResponse({type: Boolean})
     @Get('check_beta_code/:code')
-    missedCallNotification(@Param('code') code: string, @Req() request) {
+    checkBetaCode(@Param('code') code: string, @Req() request) {
       return this.authService.checkBetaCode(code);
+    }
+
+    @ApiOperation({summary: "Check if a given wallet is already an user"})
+    @ApiParam({name: 'wallet', description: 'wallet address', allowEmptyValue: false})
+    @ApiOkResponse({type: Boolean})
+    @Get('check_wallet_is_user/:wallet')
+    checkWalletIsUser(@Param('wallet') wallet: string, @Req() request) {
+      return this.authService.checkWalletIsUser(wallet);
     }
 
 
@@ -48,11 +56,10 @@ export class AuthController {
     return this.authService.verifySignature(walletConnectDTO);
   }
 
-  @ApiOperation({summary : "create wallet"})
-  @Get("create")
-  @ApiCreatedResponse({type: SignInSuccessDTO})
-  createWalletOnTheFly(){
-    return this.authService.createWalletOnTheFly()
-  }
+
+  /*@Get("createUAW")
+  test(){
+    return this.authService.test();
+  }*/
 
 }

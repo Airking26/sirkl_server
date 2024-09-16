@@ -8,11 +8,23 @@ import { InboxCreationDTO } from "./dto/dto.inbox";
 import { Inbox } from "./interface/interface.inbox";
 import { gql, request } from 'graphql-request'
 import { GraphQLResponse } from "graphql-request/build/esm/types";
+import { InboxExtensionDTO } from "./dto/dto.inbox_extension";
 
 
 @Injectable()
 export class InboxService{
     constructor(@InjectModel("Inbox") private readonly inboxModel: Model<Inbox>, private readonly userService: UserService){}
+
+    /*async sendMessageWithExtension(inboxExtension : InboxExtensionDTO){
+      const senderID = await this.userService.returnIdBasedOnWallet(inboxExtension.sender);
+      const receiverID = await this.userService.returnIdBasedOnWallet(inboxExtension.receiver);
+      const apiKey = process.env.STREAM_API_KEY
+      const secret = process.env.STREAM_SECRET
+      const serverClient = StreamChat.getInstance(apiKey, secret)
+      var channel = serverClient.channel("try", {members: [senderID, receiverID], isConv: true})
+      await channel.watch()
+      await channel.sendMessage({text: inboxExtension.message, user_id: senderID})
+    }*/
 
     async createChannel(inboxCreationDTO : InboxCreationDTO, user){
         const apiKey = process.env.STREAM_API_KEY

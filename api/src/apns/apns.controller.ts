@@ -11,10 +11,10 @@ import { NotificationToAllDTO } from "./dto/dto.notification_to_all";
 export class ApnsController{
     constructor(private apnService: ApnsService) {}
 
-    @ApiOperation({summary: "Send notification to all users (Admin Level)"})
+    /*@ApiOperation({summary: "Send notification to all users (Admin Level)"})
     @ApiBody({type: NotificationToAllDTO, required: true})
     @Post("create")
     sendNotificationToAllUsers(@Body() notificationToAllDTO : NotificationToAllDTO, @Req() request){
         return this.apnService.sendNotificationToAllUsers(notificationToAllDTO, request.user)
-    }  
+    }  */
 }

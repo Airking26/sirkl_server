@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthController } from '../auth/auth.controller';
@@ -21,6 +21,9 @@ import { StoryModule } from 'src/story/story.module';
 import { NicknamesModule } from 'src/nicknames/nicknames.module';
 import { APNsModule } from 'src/apns/apns.module';
 import { JoinModule } from 'src/requests/request.module';
+import { ApiKeyMiddleware } from 'src/middleware/api.key.middleware';
+import serveStatic from 'serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -48,5 +51,13 @@ import { JoinModule } from 'src/requests/request.module';
   controllers: [AppController],
   providers: [AppService],
 })
+
+
 export class AppModule {
+  k = `Serving files from ${join(__dirname, '..', '..', 'public')}`;
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(serveStatic(join(__dirname, '..', '..', 'public'), { index: false }))
+      .forRoutes('/');
+  }
 }

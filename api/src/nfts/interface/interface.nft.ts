@@ -8,5 +8,8 @@ export interface NFT{
     collectionImage: string,
     contractAddress: string,
     isFav: boolean,
-    floorPrice: number
+    floorPrice: number,
+    isNft: boolean,
+    subtitle?: string,
+    chain: string
 }

@@ -10,12 +10,14 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './passport/local_strategy';
 import { JwtRefreshTokenStrategy } from './passport/refresh_token_strategy';
+import { APNsModule } from 'src/apns/apns.module';
 
 @Module({
     imports:[
         UserModule,
         PassportModule.register({session: true}),
-        JwtModule.register({secret: process.env.JWT_AUTH_KEY})
+        JwtModule.register({secret: process.env.JWT_AUTH_KEY}),
+        APNsModule
     ],
     providers: [AuthService, JwtStrategy, JwtRefreshTokenStrategy],
     controllers: [AuthController]
